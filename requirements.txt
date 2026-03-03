@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+playwright
+google-generativeai
+beautifulsoup4
+requests
+fake-useragent
+python-dotenv
+pillow
+aiofiles
