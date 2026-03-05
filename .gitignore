@@ -31,6 +31,7 @@ data/
 logs/
 *.log
 dataset/
+load_dataset/
 
 # IDE/editor files
 .idea/

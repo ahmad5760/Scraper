@@ -123,6 +123,44 @@ State files created under `dataset/`:
 - `HF_UPLOAD_MAX_RETRIES`: retries per failed batch (default `5`).
 - `HF_UPLOAD_INITIAL_BACKOFF_SECONDS`: retry backoff base seconds (default `2`).
 
+## Download Dataset from Hugging Face
+
+Use `load_dataset.py` to download the full dataset repository snapshot locally.
+
+```bash
+python load_dataset.py
+```
+
+Defaults:
+
+- Repo: `Ahmad1931259/fashion-product-images`
+- Local directory: `load_dataset/`
+- Auth token (optional for public repos): `HF_TOKEN` or `HUGGINGFACE_HUB_TOKEN`
+
+## Check Person Presence in an Image
+
+Use `person_checker.py` to check whether an image contains at least one person with GPT-4o Mini Vision.
+
+```bash
+python person_checker.py
+```
+
+Default image path:
+
+- `dawah_t-shirt/1195_image.jpg` (it also tries `load_dataset/dawah_t-shirt/1195_image.jpg`)
+
+Output format:
+
+```json
+{"person_present": "yes"}
+```
+
+or
+
+```json
+{"person_present": "no"}
+```
+
 ## Start Crawling
 
 `POST /start-crawl`
