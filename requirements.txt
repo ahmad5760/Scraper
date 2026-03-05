@@ -8,3 +8,4 @@ fake-useragent
 python-dotenv
 pillow
 aiofiles
+huggingface_hub

@@ -30,6 +30,7 @@ test-results/
 data/
 logs/
 *.log
+dataset/
 
 # IDE/editor files
 .idea/
