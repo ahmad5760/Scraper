@@ -22,6 +22,7 @@ app/
     crawler.py             # Crawl flow (collect -> filter -> scrape)
     llm_filter.py          # Gemini + fallback URL filtering
     image_scraper.py       # Image download and save logic
+hf_upload.py               # Batch uploader from local dataset/ to Hugging Face dataset repo
 dataset/                   # Downloaded images + metadata (generated at runtime)
 requirements.txt
 ```
@@ -61,6 +62,66 @@ uvicorn app.main:app --reload
 
 - API root: `http://127.0.0.1:8000/`
 - Swagger docs: `http://127.0.0.1:8000/docs`
+
+## Upload Dataset to Hugging Face
+
+`hf_upload.py` uploads scraped images from `dataset/` to a Hugging Face dataset repository in resumable batches.
+
+Install dependencies (already included in `requirements.txt`):
+
+```bash
+pip install -r requirements.txt
+```
+
+Set auth and repo env vars in `.env`:
+
+```env
+HF_TOKEN=your_huggingface_token
+# Optional:
+# HUGGINGFACE_HUB_TOKEN=your_huggingface_token
+# HF_DATASET_REPO=username/repo_name
+# HF_DATASET_NAME=fashion-product-images
+# HF_DATASET_PRIVATE=true
+```
+
+Run upload:
+
+```bash
+python hf_upload.py
+```
+
+Dry run (no upload, no file deletion):
+
+```bash
+python hf_upload.py --dry-run
+```
+
+### hf_upload.py behavior
+
+- Reads local `.env` automatically.
+- Scans `LOCAL_DATASET_DIR` (default `dataset/`) for image files in keyword subfolders.
+- Uploads image extensions: `.jpg`, `.jpeg`, `.png`, `.webp`.
+- Optionally requires sidecar metadata (`.json`) per image (`HF_REQUIRE_METADATA=true` by default).
+- Uploads in batches (`HF_BATCH_SIZE`, default `300`) with retry/backoff controls.
+- Verifies uploaded files exist remotely before marking success.
+- On successful batch upload, updates local state and deletes uploaded local files.
+
+State files created under `dataset/`:
+
+- `.hf_upload_manifest.json`: tracks uploaded images to avoid re-uploading.
+- `.hf_upload_batches.jsonl`: append-only batch run log.
+
+### hf_upload.py environment variables
+
+- `HF_TOKEN` or `HUGGINGFACE_HUB_TOKEN`: Hugging Face access token (required).
+- `HF_DATASET_REPO`: target dataset repo (`username/repo` or just `repo`).
+- `HF_DATASET_NAME`: default repo name when `HF_DATASET_REPO` is not set.
+- `HF_DATASET_PRIVATE`: `true/false` (default `true`) when creating repo.
+- `LOCAL_DATASET_DIR`: local dataset root (default `dataset`).
+- `HF_REQUIRE_METADATA`: require matching `.json` for each image (default `true`).
+- `HF_BATCH_SIZE`: images per batch (default `300`).
+- `HF_UPLOAD_MAX_RETRIES`: retries per failed batch (default `5`).
+- `HF_UPLOAD_INITIAL_BACKOFF_SECONDS`: retry backoff base seconds (default `2`).
 
 ## Start Crawling
 
