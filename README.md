@@ -7,7 +7,8 @@ FastAPI service that crawls e-commerce websites, filters likely product URLs wit
 - Crawl internal links from one or more seed URLs (DFS traversal).
 - Filter candidate links with Gemini (`google-generativeai`) in batches.
 - Fallback to local keyword-based filtering when Gemini fails.
-- Download images with size constraints and category-based folders.
+- Download images with size constraints into keyword-based folders.
+- Save per-image sidecar metadata (`.json`) with source/page details.
 - Stop automatically after reaching a max image limit.
 
 ## Project Structure
@@ -21,7 +22,7 @@ app/
     crawler.py             # Crawl flow (collect -> filter -> scrape)
     llm_filter.py          # Gemini + fallback URL filtering
     image_scraper.py       # Image download and save logic
-data/                      # Downloaded images (generated at runtime)
+dataset/                   # Downloaded images + metadata (generated at runtime)
 requirements.txt
 ```
 
@@ -89,6 +90,7 @@ curl -X POST "http://127.0.0.1:8000/start-crawl" \
 Edit values in `app/config.py`:
 
 - `KEYWORDS`: target product keywords used for categorization/filtering.
+- `DATASET_DIR`: root folder for output dataset.
 - `MIN_WIDTH`, `MIN_HEIGHT`: minimum image size.
 - `MAX_PAGES_TO_CRAWL`: crawler exploration cap.
 - `BATCH_SIZE_LLM`: URLs sent per Gemini request.

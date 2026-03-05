@@ -9,16 +9,11 @@ class Config:
     
     # Target keywords
     KEYWORDS = [
-        "Honey",
-        "Honeycomb",
-        "Black Seed",
-        "Mustard Oil",
-        "Kalijira Oil",
-        "Green Tea",
-        "Matcha",
-        "Masala",
-        "Kabuli Chola",
-        "Combo Pack"
+        "panjabi",
+        "thobe",
+        "abaya",
+        "dawah t-shirt",
+        "kifaya",
     ]
     
     # Image constraints
@@ -30,4 +25,7 @@ class Config:
     BATCH_SIZE_LLM = 10 
     
     # Stop after saving this many images
-    MAX_TOTAL_IMAGES = 120
+    MAX_TOTAL_IMAGES = 400
+
+    # Output dataset root directory
+    DATASET_DIR = "dataset"
